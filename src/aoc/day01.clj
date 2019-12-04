@@ -19,7 +19,7 @@
 (def part1-answer 3506577)
 
 (defn get-fuel-required-rec [module-mass]
-  (loop [fuel-required (get-fuel-required module-mass)]
+  (let [fuel-required (get-fuel-required module-mass)]
     (if (< fuel-required 0)
       (lazy-seq (cons 0 (get-fuel-required-rec 0)))
       (lazy-seq (cons fuel-required (get-fuel-required-rec fuel-required))))))
