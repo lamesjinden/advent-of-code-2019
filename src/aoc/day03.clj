@@ -69,3 +69,26 @@
 
 (def part-answer {:distance 557, :coord [181 376]})         ;answer => 557
 
+(defn steps-to-reach
+  ([coord w]
+   (let [path (take-while #(not (= coord %)) w)]
+     (count path)))
+  ([coord w1 w2]
+   (let [w1-path-length (steps-to-reach coord w1)
+         w2-path-length (steps-to-reach coord w2)]
+     (+ w1-path-length w2-path-length))))
+
+(defn part2 []
+  (let [wires (file->wires)
+        w1 (->> wires (first) (wire->coords))
+        w2 (->> wires (second) (wire->coords))
+        w1-set (->> wires (first) (wire->coords) (set))
+        w2-set (->> wires (second) (wire->coords) (set))
+        intersections (->> (clojure.set/intersection w1-set w2-set)
+                           (filter #(not (= [0 0] %))))
+        distances (->> intersections
+                       (map #(steps-to-reach % w1 w2))
+                       (sort))]
+    (first distances)))
+
+(def part2-answer 56410)
